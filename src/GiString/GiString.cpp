@@ -2204,3 +2204,46 @@ bool GiString::valid_utf8(const std::string& str) {
 // GiString* myString = new GiString();
 // bool result = myString->valid_utf8("Hello, world!");
 // std::cout << "Is the string a valid UTF-8 sequence? " << (result ? "Yes" : "No") << std::endl;
+
+
+
+/**
+ * @brief Converts a string to its binary representation.
+ * 
+ * @param str The input string to convert.
+ * @return The binary representation of the string.
+ */
+std::string GiString::to_binary(const std::string& str) {
+    std::string binary;
+    for (char c : str) {
+        binary += std::bitset<8>(c).to_string();
+    }
+    return binary;
+}
+
+// Example usage:
+// GiString* myString = new GiString();
+// std::string binaryString = myString->to_binary("Hello");
+// std::cout << "Binary representation: " << binaryString << std::endl;
+
+
+/**
+ * @brief Converts a binary representation to its corresponding string.
+ * 
+ * @param binary The input binary representation to convert.
+ * @return The string decoded from the binary representation.
+ */
+std::string GiString::from_binary(const std::string& binary) {
+    std::string str;
+    for (std::size_t i = 0; i < binary.length(); i += 8) {
+        std::bitset<8> bits(binary.substr(i, 8));
+        char c = static_cast<char>(bits.to_ulong());
+        str.push_back(c);
+    }
+    return str;
+}
+
+// Example usage:
+// GiString* myString = new GiString();
+// std::string originalString = myString->from_binary("01001000 01100101 01101100 01101100 01101111");
+// std::cout << "Decoded string: " << originalString << std::endl;

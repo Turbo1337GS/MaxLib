@@ -12,6 +12,7 @@
 #include <random>
 #include <stdexcept>
 #include <iomanip>
+#include <bitset>
 class GiString
 {
 public:
@@ -88,6 +89,7 @@ public:
     std::string base64_encode(const std::string &str);
     std::string base64_decode(const std::string &str);
     bool valid_utf8(const std::string &str);
+    std::string from_binary(const std::string &binary);
     template <typename T>
     T reduce(const std::string &str, T init, std::function<T(T, char)> binary_func);
 };

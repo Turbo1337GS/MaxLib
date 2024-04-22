@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/MaxLib.dir/src/GiString/GiString.cpp.o CMakeFiles/MaxLib.dir/src/demo.cpp.o -o bin/MaxLib 

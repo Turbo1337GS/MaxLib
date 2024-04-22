@@ -1,0 +1,4 @@
+/home/turbo/Pulpit/github/MaxLib/CMakeFiles/MaxLib.dir
+/home/turbo/Pulpit/github/MaxLib/CMakeFiles/clean-all.dir
+/home/turbo/Pulpit/github/MaxLib/CMakeFiles/edit_cache.dir
+/home/turbo/Pulpit/github/MaxLib/CMakeFiles/rebuild_cache.dir

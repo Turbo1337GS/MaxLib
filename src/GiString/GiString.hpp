@@ -11,6 +11,7 @@
 #include <functional>
 #include <random>
 #include <stdexcept>
+#include <iomanip>
 class GiString
 {
 public:
@@ -69,15 +70,24 @@ public:
     std::string indent(const std::string &str, int count);
     std::string dedent(const std::string &str);
     std::string replace_first(const std::string &str, const std::string &from, const std::string &to);
-
     std::string replace_last(const std::string &str, const std::string &from, const std::string &to);
-
     std::string reversed(const std::string &str);
-
     std::string shuffle(const std::string &str);
-
     std::string sort(const std::string &str);
-
+    std::string sort_desc(const std::string &str);
+    std::string repeat(const std::string &str, int times);
+    bool lexicographic_compare(const std::string &str1, const std::string &str2);
+    std::string extract_digits(const std::string &str);
+    bool is_blank(const std::string &str);
+    bool is_uppercase(const std::string &str);
+    bool is_valid_email(const std::string &str);
+    bool is_valid_local_part(const std::string &localPart);
+    bool is_valid_domain_part(const std::string &domainPart);
+    std::string url_encode(const std::string &str);
+    std::string url_decode(const std::string &str);
+    std::string base64_encode(const std::string &str);
+    std::string base64_decode(const std::string &str);
+    bool valid_utf8(const std::string &str);
     template <typename T>
     T reduce(const std::string &str, T init, std::function<T(T, char)> binary_func);
 };

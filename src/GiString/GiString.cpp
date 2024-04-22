@@ -1742,3 +1742,465 @@ std::string GiString::sort(const std::string& str) {
 // GiString* myString = new GiString("hello");
 // std::string sortedString = myString->sort();
 // std::cout << "Sorted string: " << sortedString << std::endl;
+
+
+/**
+ * @brief Sorts the characters in a string in reverse alphabetical order.
+ * 
+ * @param str The input string to sort.
+ * @return The string with characters sorted in reverse alphabetical order.
+ * 
+ * @throws std::invalid_argument If the input string is empty.
+ */
+std::string GiString::sort_desc(const std::string& str) {
+    // Check if the input string is empty
+    if (str.empty()) {
+        throw std::invalid_argument("Input string is empty (GiString::sort_desc)");
+    }
+
+    // Create a copy of the input string
+    std::string result = str;
+
+    // Sort the characters in reverse alphabetical order
+    std::sort(result.begin(), result.end(), std::greater<char>());
+    return result;
+}
+
+// Example usage:
+// GiString* myString = new GiString("hello");
+// std::string sortedDescString = myString->sort_desc();
+// std::cout << "Sorted descending string: " << sortedDescString << std::endl;
+
+
+/**
+ * @brief Repeats the input string a specified number of times.
+ * 
+ * @param str The input string to repeat.
+ * @param times The number of times to repeat the input string.
+ * @return The string repeated the specified number of times.
+ * 
+ * @throws std::invalid_argument If the input string is empty or the number of times is non-positive.
+ */
+std::string GiString::repeat(const std::string& str, int times) {
+    // Check if the input string is empty
+    if (str.empty()) {
+        throw std::invalid_argument("Input string is empty (GiString::repeat)");
+    }
+
+    // Check if the number of times is non-positive
+    if (times <= 0) {
+        throw std::invalid_argument("Number of times must be positive (GiString::repeat)");
+    }
+
+    // Repeat the input string the specified number of times
+    std::string result;
+    for (int i = 0; i < times; ++i) {
+        result += str;
+    }
+    return result;
+}
+
+// Example usage:
+// GiString* myString = new GiString("hello");
+// std::string repeatedString = myString->repeat(3);
+// std::cout << "Repeated string: " << repeatedString << std::endl;
+
+
+/**
+ * @brief Compares two strings lexicographically.
+ * 
+ * @param str1 The first string to compare.
+ * @param str2 The second string to compare.
+ * @return true if str1 is lexicographically less than str2, false otherwise.
+ */
+bool GiString::lexicographic_compare(const std::string& str1, const std::string& str2) {
+    // Use std::lexicographical_compare to compare the strings
+    return std::lexicographical_compare(str1.begin(), str1.end(), str2.begin(), str2.end());
+}
+
+// Example usage:
+// GiString* myString = new GiString();
+// bool isLess = myString->lexicographic_compare("apple", "banana");
+// std::cout << "Is 'apple' less than 'banana'? " << (isLess ? "Yes" : "No") << std::endl;
+
+
+
+#include <cctype>
+
+/**
+ * @brief Extracts all digits from a string and returns them as a new string.
+ * 
+ * @param str The input string to extract digits from.
+ * @return The string containing all extracted digits.
+ */
+std::string GiString::extract_digits(const std::string& str) {
+    std::string result;
+    for (char c : str) {
+        if (std::isdigit(c)) {
+            result += c;
+        }
+    }
+    return result;
+}
+
+// Example usage:
+// GiString* myString = new GiString();
+// std::string digits = myString->extract_digits("a1b2c3d4");
+// std::cout << "Extracted digits: " << digits << std::endl;
+
+
+
+/**
+ * @brief Checks if a string consists only of whitespace characters.
+ * 
+ * @param str The input string to check.
+ * @return true if the string consists only of whitespace characters, false otherwise.
+ */
+bool GiString::is_blank(const std::string& str) {
+    // Use std::all_of to check if all characters in the string are whitespace
+    return std::all_of(str.begin(), str.end(), [](char c) { return std::isspace(c); });
+}
+
+// Example usage:
+// GiString* myString = new GiString();
+// bool result = myString->is_blank("   ");
+// std::cout << "Is the string blank? " << (result ? "Yes" : "No") << std::endl;
+
+
+/**
+ * @brief Checks if all letters in a string are uppercase.
+ * 
+ * @param str The input string to check.
+ * @return true if all letters in the string are uppercase, false otherwise.
+ */
+bool GiString::is_uppercase(const std::string& str) {
+    // Use std::all_of to check if all characters in the string are uppercase letters
+    return std::all_of(str.begin(), str.end(), [](char c) { return std::isupper(c); });
+}
+
+// Example usage:
+// GiString* myString = new GiString();
+// bool result = myString->is_uppercase("HELLO");
+// std::cout << "Are all letters uppercase? " << (result ? "Yes" : "No") << std::endl;
+
+
+/**
+ * @brief Checks if a string is a valid email address.
+ * 
+ * @param str The input string to check.
+ * @return true if the string is a valid email address, false otherwise.
+ */
+bool GiString::is_valid_email(const std::string& str) {
+    // Find the position of '@'
+    auto atIndex = str.find('@');
+    if (atIndex == std::string::npos || atIndex == 0 || atIndex == str.length() - 1) {
+        return false; // '@' not found or at the beginning/end of the string
+    }
+
+    // Check if there is exactly one '@' symbol
+    if (str.find('@', atIndex + 1) != std::string::npos) {
+        return false; // more than one '@' symbol found
+    }
+
+    // Extract local part and domain part
+    std::string localPart = str.substr(0, atIndex);
+    std::string domainPart = str.substr(atIndex + 1);
+
+    // Check if local part is valid
+    if (!is_valid_local_part(localPart)) {
+        return false;
+    }
+
+    // Check if domain part is valid
+    if (!is_valid_domain_part(domainPart)) {
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * @brief Checks if the local part of an email address is valid.
+ * 
+ * @param localPart The local part of the email address.
+ * @return true if the local part is valid, false otherwise.
+ */
+bool GiString::is_valid_local_part(const std::string& localPart) {
+    // Local part cannot be empty
+    if (localPart.empty()) {
+        return false;
+    }
+
+    // Local part can contain only alphanumeric characters, dot '.', underscore '_', and hyphen '-'
+    for (char c : localPart) {
+        if (!std::isalnum(c) && c != '.' && c != '_' && c != '-') {
+            return false;
+        }
+    }
+
+    // Local part cannot start or end with dot '.' or underscore '_'
+    if (localPart.front() == '.' || localPart.front() == '_' || localPart.back() == '.' || localPart.back() == '_') {
+        return false;
+    }
+
+    // Local part cannot have consecutive dots '..'
+    if (localPart.find("..") != std::string::npos) {
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * @brief Checks if the domain part of an email address is valid.
+ * 
+ * @param domainPart The domain part of the email address.
+ * @return true if the domain part is valid, false otherwise.
+ */
+bool GiString::is_valid_domain_part(const std::string& domainPart) {
+    // Domain part cannot be empty
+    if (domainPart.empty()) {
+        return false;
+    }
+
+    // Domain part can contain only alphanumeric characters, dot '.', and hyphen '-'
+    for (char c : domainPart) {
+        if (!std::isalnum(c) && c != '.') {
+            return false;
+        }
+    }
+
+    // Domain part cannot start or end with dot '.'
+    if (domainPart.front() == '.' || domainPart.back() == '.') {
+        return false;
+    }
+
+    // Domain part cannot have consecutive dots '..'
+    if (domainPart.find("..") != std::string::npos) {
+        return false;
+    }
+
+    // Domain part must have at least one dot '.'
+    if (domainPart.find('.') == std::string::npos) {
+        return false;
+    }
+
+    return true;
+}
+
+// Example usage:
+// GiString* myString = new GiString();
+// bool result = myString->is_valid_email("example@example.com");
+// std::cout << "Is the string a valid email address? " << (result ? "Yes" : "No") << std::endl;
+
+
+/**
+ * @brief URL-encodes a string.
+ * 
+ * @param str The input string to encode.
+ * @return The URL-encoded string.
+ */
+std::string GiString::url_encode(const std::string& str) {
+    std::ostringstream escaped;
+    escaped.fill('0');
+    escaped << std::hex;
+
+    for (char c : str) {
+        // Keep alphanumeric and special characters untouched
+        if (std::isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~') {
+            escaped << c;
+        } else if (c == ' ') {
+            escaped << '+';
+        } else {
+            // Encode other characters
+            escaped << '%' << std::setw(2) << static_cast<unsigned int>(static_cast<unsigned char>(c));
+        }
+    }
+
+    return escaped.str();
+}
+
+// Example usage:
+// GiString* myString = new GiString();
+// std::string encodedString = myString->url_encode("hello world");
+// std::cout << "Encoded string: " << encodedString << std::endl;
+
+
+/**
+ * @brief URL-decodes a string.
+ * 
+ * @param str The input string to decode.
+ * @return The URL-decoded string.
+ */
+std::string GiString::url_decode(const std::string& str) {
+    std::ostringstream decoded;
+
+    for (std::size_t i = 0; i < str.size(); ++i) {
+        if (str[i] == '%') {
+            if (i + 2 < str.size() && std::isxdigit(str[i + 1]) && std::isxdigit(str[i + 2])) {
+                // Decode percent-encoded character
+                int hexValue;
+                std::istringstream hexStream(str.substr(i + 1, 2));
+                hexStream >> std::hex >> hexValue;
+                decoded << static_cast<char>(hexValue);
+                i += 2;
+            } else {
+                // Malformed percent encoding, leave as is
+                decoded << str[i];
+            }
+        } else if (str[i] == '+') {
+            // Replace '+' with space character
+            decoded << ' ';
+        } else {
+            decoded << str[i];
+        }
+    }
+
+    return decoded.str();
+}
+
+// Example usage:
+// GiString* myString = new GiString();
+// std::string decodedString = myString->url_decode("hello%20world");
+// std::cout << "Decoded string: " << decodedString << std::endl;
+
+
+/**
+ * @brief Encodes a string to Base64 format.
+ * 
+ * @param str The input string to encode.
+ * @return The Base64-encoded string.
+ */
+std::string GiString::base64_encode(const std::string& str) {
+    // Base64 characters table
+    const std::string base64_chars =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz"
+        "0123456789+/";
+
+    // Convert string to bytes
+    std::vector<unsigned char> bytes(str.begin(), str.end());
+
+    std::string encoded;
+    int i = 0;
+    unsigned char char_array_3[3];
+    unsigned char char_array_4[4];
+
+    for (auto& byte : bytes) {
+        char_array_3[i++] = byte;
+        if (i == 3) {
+            char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;
+            char_array_4[1] = ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4);
+            char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6);
+            char_array_4[3] = char_array_3[2] & 0x3f;
+
+            for (i = 0; i < 4; ++i)
+                encoded += base64_chars[char_array_4[i]];
+            i = 0;
+        }
+    }
+
+    if (i) {
+        for (int j = i; j < 3; ++j)
+            char_array_3[j] = '\0';
+
+        char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;
+        char_array_4[1] = ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4);
+        char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6);
+
+        for (int j = 0; j < i + 1; ++j)
+            encoded += base64_chars[char_array_4[j]];
+
+        while (i++ < 3)
+            encoded += '=';
+    }
+
+    return encoded;
+}
+
+// Example usage:
+// GiString* myString = new GiString();
+// std::string encodedString = myString->base64_encode("Hello, World!");
+// std::cout << "Base64 encoded string: " << encodedString << std::endl;
+
+
+/**
+ * @brief Decodes a Base64-encoded string.
+ * 
+ * @param str The Base64-encoded string to decode.
+ * @return The decoded string.
+ */
+std::string GiString::base64_decode(const std::string& str) {
+    // Base64 characters table
+    const std::string base64_chars =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz"
+        "0123456789+/";
+
+    std::vector<int> decoding_table(256, -1);
+    for (int i = 0; i < 64; ++i) {
+        decoding_table[base64_chars[i]] = i;
+    }
+
+    std::string decoded;
+    int val = 0, valb = -8;
+    for (unsigned char c : str) {
+        if (decoding_table[c] == -1) break;
+        val = (val << 6) + decoding_table[c];
+        valb += 6;
+        if (valb >= 0) {
+            decoded.push_back(static_cast<char>((val >> valb) & 0xFF));
+            valb -= 8;
+        }
+    }
+
+    return decoded;
+}
+
+// Example usage:
+// GiString* myString = new GiString();
+// std::string decodedString = myString->base64_decode("SGVsbG8sIFdvcmxkIQ==");
+// std::cout << "Base64 decoded string: " << decodedString << std::endl;
+
+
+
+/**
+ * @brief Checks if a string is a valid UTF-8 sequence.
+ * 
+ * @param str The input string to check.
+ * @return true if the string is a valid UTF-8 sequence, false otherwise.
+ */
+bool GiString::valid_utf8(const std::string& str) {
+    int bytesToFollow = 0;
+    for (char c : str) {
+        if (bytesToFollow == 0) {
+            if ((c & 0b10000000) == 0b0) {
+                // Single-byte character
+                bytesToFollow = 0;
+            } else if ((c & 0b11100000) == 0b11000000) {
+                // Two-byte character
+                bytesToFollow = 1;
+            } else if ((c & 0b11110000) == 0b11100000) {
+                // Three-byte character
+                bytesToFollow = 2;
+            } else if ((c & 0b11111000) == 0b11110000) {
+                // Four-byte character
+                bytesToFollow = 3;
+            } else {
+                return false; // Invalid UTF-8 sequence
+            }
+        } else {
+            if ((c & 0b11000000) != 0b10000000) {
+                return false; // Invalid UTF-8 sequence   
+                //
+            }
+            bytesToFollow--;
+        }
+    }
+    return bytesToFollow == 0;
+}
+
+// Example usage:
+// GiString* myString = new GiString();
+// bool result = myString->valid_utf8("Hello, world!");
+// std::cout << "Is the string a valid UTF-8 sequence? " << (result ? "Yes" : "No") << std::endl;

@@ -58,29 +58,27 @@
 64. **replace_last** - Zastępuje ostatnie wystąpienie podstringu innym stringiem.✅
 65. **reversed** - Zwraca string, którego znaki są w odwrotnej kolejności.✅
 66. **shuffle** - Losowo miesza znaki w stringu.✅
-67. **sort** - Sortuje znaki w stringu w kolejności alfabetycznej.
-68. **sort_desc** - Sortuje znaki w stringu w odwrotnej kolejności alfabetycznej.
-69. **repeat** - Powtarza string określoną liczbę razy.
-70. **lexicographic_compare** - Porównuje dwa stringi leksykograficznie.
-71. **extract_digits** - Wyciąga wszystkie cyfry ze stringu i zwraca je jako nowy string.
-72. **is_blank** - Sprawdza, czy string składa się tylko z białych znaków.
-73. **is_uppercase** - Sprawdza, czy wszystkie litery w stringu są wielkie.
-74. **is_lowercase** - Sprawdza, czy wszystkie litery w stringu są małe.
-75. **is_valid_email** - Sprawdza, czy string jest prawidłowym adresem email.
+67. **sort** - Sortuje znaki w stringu w kolejności alfabetycznej.✅
+68. **sort_desc** - Sortuje znaki w stringu w odwrotnej kolejności alfabetycznej.✅
+69. **repeat** - Powtarza string określoną liczbę razy.✅
+70. **lexicographic_compare** - Porównuje dwa stringi leksykograficznie.✅
+71. **extract_digits** - Wyciąga wszystkie cyfry ze stringu i zwraca je jako nowy string.✅
+72. **is_blank** - Sprawdza, czy string składa się tylko z białych znaków.✅
+73. **is_uppercase** - Sprawdza, czy wszystkie litery w stringu są wielkie.✅
+74. **is_lowercase** - Sprawdza, czy wszystkie litery w stringu są małe.✅
+75. **is_valid_email** - Sprawdza, czy string jest prawidłowym adresem email.✅
 76. **escape_html** - Konwertuje znaki specjalne HTML na ich encje.
 77. **unescape_html** - Konwertuje encje HTML na znaki specjalne.
-78. **url_encode** - Koduje string do formatu URL.
-79. **url_decode** - Dekoduje string z formatu URL.
-80. **base64_encode** - Koduje string do formatu Base64.
-81. **base64_decode** - Dekoduje string z formatu Base64.
+78. **url_encode** - Koduje string do formatu URL.✅
+79. **url_decode** - Dekoduje string z formatu URL.✅
+80. **base64_encode** - Koduje string do formatu Base64.✅
+81. **base64_decode** - Dekoduje string z formatu Base64.✅
 82. **hash_md5** - Zwraca hash MD5 stringu.
 83. **hash_sha1** - Zwraca hash SHA-1 stringu.
 84. **hash_sha256** - Zwraca hash SHA-256 stringu.
-85. **valid_utf8** - Sprawdza, czy string jest prawidłowym ciągiem UTF-8.
+85. **valid_utf8** - Sprawdza, czy string jest prawidłowym ciągiem UTF-8.✅
 86. **to_binary** - Konwertuje string na jego reprezentację binarną.
 87. **from_binary** - Konwertuje reprezentację binarną na string.
-88. **pad_left** - Alias dla funkcji `ljust`.
-89. **pad_right** - Alias dla funkcji `rjust`.
 90. **capitalize_each_word** - Kapitalizuje pierwsze litery każdego słowa w stringu, zachowując inne litery bez zmian.
 91. **difference** - Porównuje dwa stringi i zwraca ich różnice.
 92. **is_subsequence** - Sprawdza, czy jeden string jest podciągiem drugiego.

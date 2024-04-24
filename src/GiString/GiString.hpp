@@ -114,6 +114,7 @@ public:
     std::string remove_punctuation(const std::string &str);
     std::string to_hex(const std::string &str);
     std::string from_hex(const std::string &hexStr);
+    std::string to_octal(const std::string &str);
     std::string capitalize_each_word(const std::string &str);
     template <typename T>
     T reduce(const std::string &str, T init, std::function<T(T, char)> binary_func);

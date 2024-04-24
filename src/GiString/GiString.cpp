@@ -3145,3 +3145,37 @@ std::string GiString::from_hex(const std::string& hexStr) {
 // std::string result = gString->from_hex(input);
 // std::cout << "ASCII representation: " << result << std::endl;
 // Output: "ASCII representation: hello"
+
+
+
+/**
+ * @brief Converts a string to its octal representation.
+ * 
+ * @param str The input string to convert.
+ * @return The octal representation of the input string.
+ * 
+ * @throws std::invalid_argument If the input string is empty.
+ */
+std::string GiString::to_octal(const std::string& str) {
+    // Check if the input string is empty
+    if (str.empty()) {
+        throw std::invalid_argument("Input string is empty (GiString::to_octal)");
+    }
+
+    std::stringstream ss;
+
+    // Convert each character of the input string to octal representation
+    for (char c : str) {
+        // Convert the character to octal and append it to the stringstream
+        ss << std::oct << std::setw(3) << std::setfill('0') << static_cast<int>(c);
+    }
+
+    return ss.str();
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string input = "hello";
+// std::string result = gString->to_octal(input);
+// std::cout << "Octal representation: " << result << std::endl;
+// Output: "Octal representation: 150 145 154 154 157"

@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <cstdio>
 #include <algorithm>
+#include <unordered_map>
 #include <cassert>
 #include <vector>
 #include <sstream>
@@ -13,6 +14,7 @@
 #include <stdexcept>
 #include <iomanip>
 #include <bitset>
+#include <iomanip> 
 class GiString
 {
 public:
@@ -90,6 +92,29 @@ public:
     std::string base64_decode(const std::string &str);
     bool valid_utf8(const std::string &str);
     std::string from_binary(const std::string &binary);
+    std::string to_binary(const std::string &str);
+    std::string difference(const std::string &str1, const std::string &str2);
+    bool is_subsequence(const std::string &str, const std::string &sequence);
+    int levenshtein_distance(const std::string &s1, const std::string &s2);
+    std::string longest_common_subsequence(const std::string &str1, const std::string &str2);
+    std::string longest_common_substring(const std::string &str1, const std::string &str2);
+    std::string next_permutation(const std::string &str);
+    std::string prev_permutation(const std::string &str);
+    std::string random_string(size_t length);
+    std::string quote(const std::string &str);
+    std::string unquote(const std::string &str);
+    std::string mask_sensitive(const std::string &str, const std::string &sensitiveChars, char maskChar);
+    std::string capitalize_sentences(const std::string &str);
+    size_t line_count(const std::string &str);
+    char least_common_char(const std::string &str);
+    char most_common_char(const std::string &str);
+    std::string swap_position(const std::string &str, size_t pos1, size_t pos2);
+    int roman_to_int(const std::string &s);
+    std::string normalize_whitespace(const std::string &str);
+    std::string remove_punctuation(const std::string &str);
+    std::string to_hex(const std::string &str);
+    std::string from_hex(const std::string &hexStr);
+    std::string capitalize_each_word(const std::string &str);
     template <typename T>
     T reduce(const std::string &str, T init, std::function<T(T, char)> binary_func);
 };

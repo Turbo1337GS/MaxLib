@@ -2207,43 +2207,941 @@ bool GiString::valid_utf8(const std::string& str) {
 
 
 
+
+
+/**
+ * @brief Capitalizes the first letter of each word in a string, leaving other letters unchanged.
+ * 
+ * @param str The input string to capitalize each word.
+ * @return The string with the first letter of each word capitalized.
+ * 
+ * @throws std::invalid_argument If the input string is empty.
+ */
+std::string GiString::capitalize_each_word(const std::string& str) {
+    // Check if the input string is empty
+    if (str.empty()) {
+        throw std::invalid_argument("Input string is empty (GiString::capitalize_each_word)");
+    }
+    
+    std::string result = str;
+    bool capitalizeNext = true; // Flag to capitalize next character
+    
+    // Iterate over each character in the string
+    for (size_t i = 0; i < result.length(); ++i) {
+        if (std::isspace(result[i])) {
+            capitalizeNext = true; // Set flag to capitalize next character if it's a space
+        } else {
+            if (capitalizeNext) {
+                result[i] = std::toupper(result[i]); // Capitalize the character
+                capitalizeNext = false; // Reset the flag
+            }
+        }
+    }
+    
+    return result;
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string input = "hello world";
+// std::string result = gString->capitalize_each_word(input);
+// std::cout << "Capitalized each word: " << result << std::endl;
+// Output: "Hello World"
+
+
+
+/**
+ * @brief Converts binary representation to a string.
+ * 
+ * @param binary The binary representation to convert.
+ * @return The string representation of the binary input.
+ * 
+ * @throws std::invalid_argument If the binary string is empty or contains non-binary characters.
+ */
+std::string GiString::from_binary(const std::string& binary) {
+    // Check if the input binary string is empty
+    if (binary.empty()) {
+        throw std::invalid_argument("Binary string is empty (GiString::from_binary)");
+    }
+
+    // Check if the input binary string contains non-binary characters
+    for (char c : binary) {
+        if (c != '0' && c != '1') {
+            throw std::invalid_argument("Invalid binary string, contains non-binary characters (GiString::from_binary)");
+        }
+    }
+
+    // Convert binary to string
+    std::string result;
+    for (size_t i = 0; i < binary.length(); i += 8) {
+        std::string byte = binary.substr(i, 8); // Get 8 characters representing a byte
+        char ch = static_cast<char>(std::stoi(byte, nullptr, 2)); // Convert binary byte to char
+        result.push_back(ch);
+    }
+
+    return result;
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string binaryInput = "01001000 01100101 01101100 01101100 01101111";
+// std::string result = gString->from_binary(binaryInput);
+// std::cout << "String from binary: " << result << std::endl;
+// Output: "Hello"
+
+
 /**
  * @brief Converts a string to its binary representation.
  * 
- * @param str The input string to convert.
- * @return The binary representation of the string.
+ * @param str The input string to convert to binary.
+ * @return The binary representation of the input string.
+ * 
+ * @throws std::invalid_argument If the input string is empty.
  */
 std::string GiString::to_binary(const std::string& str) {
-    std::string binary;
-    for (char c : str) {
-        binary += std::bitset<8>(c).to_string();
+    // Check if the input string is empty
+    if (str.empty()) {
+        throw std::invalid_argument("Input string is empty (GiString::to_binary)");
     }
-    return binary;
+
+    // Convert each character to its binary representation
+    std::string binaryResult;
+    for (char c : str) {
+        std::bitset<8> binaryChar(c); // Convert char to binary (8 bits)
+        binaryResult += binaryChar.to_string(); // Append binary representation to result
+    }
+
+    return binaryResult;
 }
 
 // Example usage:
-// GiString* myString = new GiString();
-// std::string binaryString = myString->to_binary("Hello");
-// std::cout << "Binary representation: " << binaryString << std::endl;
+// GiString* gString = new GiString();
+// std::string input = "Hello";
+// std::string result = gString->to_binary(input);
+// std::cout << "Binary representation: " << result << std::endl;
+// Output: "01001000 01100101 01101100 01101100 01101111"
 
 
 /**
- * @brief Converts a binary representation to its corresponding string.
+ * @brief Compares two strings and returns their differences.
  * 
- * @param binary The input binary representation to convert.
- * @return The string decoded from the binary representation.
+ * @param str1 The first string for comparison.
+ * @param str2 The second string for comparison.
+ * @return The differences between the two strings.
+ * 
+ * @throws std::invalid_argument If one or both input strings are empty.
  */
-std::string GiString::from_binary(const std::string& binary) {
-    std::string str;
-    for (std::size_t i = 0; i < binary.length(); i += 8) {
-        std::bitset<8> bits(binary.substr(i, 8));
-        char c = static_cast<char>(bits.to_ulong());
-        str.push_back(c);
+std::string GiString::difference(const std::string& str1, const std::string& str2) {
+    // Check if one or both input strings are empty
+    if (str1.empty() || str2.empty()) {
+        throw std::invalid_argument("One or both input strings are empty (GiString::difference)");
     }
-    return str;
+
+    // Find the minimum length between the two strings
+    size_t minLen = std::min(str1.length(), str2.length());
+    
+    // Find the position where the strings differ
+    size_t diffPos = 0;
+    while (diffPos < minLen && str1[diffPos] == str2[diffPos]) {
+        ++diffPos;
+    }
+
+    // Construct the difference string
+    std::string diff;
+    if (diffPos == minLen) {
+        // One string is a prefix of the other
+        if (str1.length() < str2.length()) {
+            diff = "Strings differ at position " + std::to_string(diffPos) + ": " + str2.substr(diffPos);
+        } else {
+            diff = "Strings differ at position " + std::to_string(diffPos) + ": " + str1.substr(diffPos);
+        }
+    } else {
+        // Strings differ at the found position
+        diff = "Strings differ at position " + std::to_string(diffPos) + ": " + str1.substr(diffPos) + " vs " + str2.substr(diffPos);
+    }
+
+    return diff;
 }
 
 // Example usage:
-// GiString* myString = new GiString();
-// std::string originalString = myString->from_binary("01001000 01100101 01101100 01101100 01101111");
-// std::cout << "Decoded string: " << originalString << std::endl;
+// GiString* gString = new GiString();
+// std::string str1 = "apple";
+// std::string str2 = "banana";
+// std::string result = gString->difference(str1, str2);
+// std::cout << "String difference: " << result << std::endl;
+// Output: "Strings differ at position 0: apple vs banana"
+
+
+/**
+ * @brief Checks if one string is a subsequence of another string.
+ * 
+ * @param str The potential subsequence string.
+ * @param sequence The string to check for the subsequence.
+ * @return True if str is a subsequence of sequence, false otherwise.
+ * 
+ * @throws std::invalid_argument If one or both input strings are empty.
+ */
+bool GiString::is_subsequence(const std::string& str, const std::string& sequence) {
+    // Check if one or both input strings are empty
+    if (str.empty() || sequence.empty()) {
+        throw std::invalid_argument("One or both input strings are empty (GiString::is_subsequence)");
+    }
+
+    size_t strIndex = 0; // Index for iterating through str
+    size_t seqIndex = 0; // Index for iterating through sequence
+
+    // Iterate through both strings until the end of either is reached
+    while (strIndex < str.length() && seqIndex < sequence.length()) {
+        if (str[strIndex] == sequence[seqIndex]) {
+            // Match found, move to the next character in str
+            ++strIndex;
+        }
+        // Move to the next character in sequence
+        ++seqIndex;
+    }
+
+    // If strIndex reached the end of str, it means all characters in str were found in sequence
+    return strIndex == str.length();
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string str = "abc";
+// std::string sequence = "aabbcc";
+// bool result = gString->is_subsequence(str, sequence);
+// std::cout << "Is subsequence? " << (result ? "Yes" : "No") << std::endl;
+// Output: "Is subsequence? Yes"
+
+
+int GiString::levenshtein_distance(const std::string& s1, const std::string& s2) {
+    int len1 = s1.size();
+    int len2 = s2.size();
+    
+    std::vector<std::vector<int>> dp(len1 + 1, std::vector<int>(len2 + 1));
+    
+    for (int i = 0; i <= len1; ++i) {
+        dp[i][0] = i;
+    }
+    
+    for (int j = 0; j <= len2; ++j) {
+        dp[0][j] = j;
+    }
+    
+    for (int i = 1; i <= len1; ++i) {
+        for (int j = 1; j <= len2; ++j) {
+            int cost = (s1[i - 1] == s2[j - 1]) ? 0 : 1;
+            
+            dp[i][j] = std::min({
+                dp[i - 1][j] + 1,         // Usunięcie
+                dp[i][j - 1] + 1,         // Dodanie
+                dp[i - 1][j - 1] + cost   // Zamiana
+            });
+        }
+    }
+    
+    return dp[len1][len2];
+}
+
+
+
+
+/**
+ * @brief Finds the longest common subsequence between two strings.
+ * 
+ * @param str1 The first string.
+ * @param str2 The second string.
+ * @return The longest common subsequence between str1 and str2.
+ * 
+ * @throws std::invalid_argument If one or both input strings are empty.
+ */
+std::string GiString::longest_common_subsequence(const std::string& str1, const std::string& str2) {
+    // Check if one or both input strings are empty
+    if (str1.empty() || str2.empty()) {
+        throw std::invalid_argument("One or both input strings are empty (GiString::longest_common_subsequence)");
+    }
+
+    // Initialize a table to store the lengths of longest common subsequences
+    std::vector<std::vector<int>> lcsTable(str1.length() + 1, std::vector<int>(str2.length() + 1, 0));
+
+    // Fill the table using dynamic programming
+    for (size_t i = 1; i <= str1.length(); ++i) {
+        for (size_t j = 1; j <= str2.length(); ++j) {
+            if (str1[i - 1] == str2[j - 1]) {
+                lcsTable[i][j] = lcsTable[i - 1][j - 1] + 1;
+            } else {
+                lcsTable[i][j] = std::max(lcsTable[i - 1][j], lcsTable[i][j - 1]);
+            }
+        }
+    }
+
+    // Construct the longest common subsequence from the table
+    std::string lcs;
+    size_t i = str1.length();
+    size_t j = str2.length();
+    while (i > 0 && j > 0) {
+        if (str1[i - 1] == str2[j - 1]) {
+            lcs = str1[i - 1] + lcs;
+            --i;
+            --j;
+        } else if (lcsTable[i - 1][j] > lcsTable[i][j - 1]) {
+            --i;
+        } else {
+            --j;
+        }
+    }
+
+    return lcs;
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string str1 = "ABCBDAB";
+// std::string str2 = "BDCAB";
+// std::string result = gString->longest_common_subsequence(str1, str2);
+// std::cout << "Longest common subsequence: " << result << std::endl;
+// Output: "BCAB"
+
+
+
+/**
+ * @brief Finds the longest common substring between two strings.
+ * 
+ * @param str1 The first string.
+ * @param str2 The second string.
+ * @return The longest common substring between str1 and str2.
+ * 
+ * @throws std::invalid_argument If one or both input strings are empty.
+ */
+std::string GiString::longest_common_substring(const std::string& str1, const std::string& str2) {
+    // Check if one or both input strings are empty
+    if (str1.empty() || str2.empty()) {
+        throw std::invalid_argument("One or both input strings are empty (GiString::longest_common_substring)");
+    }
+
+    // Initialize a table to store the lengths of longest common substrings
+    std::vector<std::vector<int>> lcsTable(str1.length() + 1, std::vector<int>(str2.length() + 1, 0));
+    int maxLen = 0; // Length of the longest common substring
+    int endIndex = 0; // End index of the longest common substring in str1
+
+    // Fill the table using dynamic programming
+    for (size_t i = 1; i <= str1.length(); ++i) {
+        for (size_t j = 1; j <= str2.length(); ++j) {
+            if (str1[i - 1] == str2[j - 1]) {
+                lcsTable[i][j] = lcsTable[i - 1][j - 1] + 1;
+                if (lcsTable[i][j] > maxLen) {
+                    maxLen = lcsTable[i][j];
+                    endIndex = i - 1; // Update end index of longest common substring
+                }
+            } else {
+                lcsTable[i][j] = 0;
+            }
+        }
+    }
+
+    // Extract the longest common substring from str1
+    return str1.substr(endIndex - maxLen + 1, maxLen);
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string str1 = "ABCBDAB";
+// std::string str2 = "BDCAB";
+// std::string result = gString->longest_common_substring(str1, str2);
+// std::cout << "Longest common substring: " << result << std::endl;
+// Output: "BD"
+
+
+/**
+ * @brief Returns the next lexicographically greater permutation of the string.
+ * 
+ * @param str The input string.
+ * @return The next lexicographically greater permutation of the input string.
+ * 
+ * @throws std::invalid_argument If the input string is empty or has only one character.
+ */
+std::string GiString::next_permutation(const std::string& str) {
+    // Check if the input string is empty or has only one character
+    if (str.empty() || str.length() == 1) {
+        throw std::invalid_argument("Input string must have at least two characters (GiString::next_permutation)");
+    }
+
+    // Create a copy of the input string to work with
+    std::string nextPermutation = str;
+
+    // Attempt to find the next lexicographically greater permutation
+    if (std::next_permutation(nextPermutation.begin(), nextPermutation.end())) {
+        return nextPermutation;
+    } else {
+        throw std::invalid_argument("No next permutation exists (GiString::next_permutation)");
+    }
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string input = "abc";
+// std::string result = gString->next_permutation(input);
+// std::cout << "Next permutation: " << result << std::endl;
+// Output: "acb"
+
+
+/**
+ * @brief Returns the next lexicographically smaller permutation of the string.
+ * 
+ * @param str The input string.
+ * @return The next lexicographically smaller permutation of the input string.
+ * 
+ * @throws std::invalid_argument If the input string is empty or has only one character.
+ */
+std::string GiString::prev_permutation(const std::string& str) {
+    // Check if the input string is empty or has only one character
+    if (str.empty() || str.length() == 1) {
+        throw std::invalid_argument("Input string must have at least two characters (GiString::prev_permutation)");
+    }
+
+    // Create a copy of the input string to work with
+    std::string prevPermutation = str;
+
+    // Attempt to find the next lexicographically smaller permutation
+    if (std::prev_permutation(prevPermutation.begin(), prevPermutation.end())) {
+        return prevPermutation;
+    } else {
+        throw std::invalid_argument("No previous permutation exists (GiString::prev_permutation)");
+    }
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string input = "cba";
+// std::string result = gString->prev_permutation(input);
+// std::cout << "Previous permutation: " << result << std::endl;
+// Output: "bca"
+
+
+/**
+ * @brief Generates a random string of the specified length.
+ * 
+ * @param length The length of the random string to generate.
+ * @return The generated random string.
+ * 
+ * @throws std::invalid_argument If the specified length is zero or negative.
+ */
+std::string GiString::random_string(size_t length) {
+    // Check if the specified length is zero or negative
+    if (length == 0) {
+        throw std::invalid_argument("Length must be greater than zero (GiString::random_string)");
+    }
+
+    // Define characters that can be used in the random string
+    const std::string charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    // Initialize random number generator
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, charset.length() - 1);
+
+    // Generate random string
+    std::string randomStr;
+    for (size_t i = 0; i < length; ++i) {
+        randomStr += charset[dis(gen)];
+    }
+
+    return randomStr;
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// size_t length = 10;
+// std::string result = gString->random_string(length);
+// std::cout << "Random string: " << result << std::endl;
+
+
+/**
+ * @brief Surrounds a string with double quotation marks.
+ * 
+ * @param str The input string to surround with quotes.
+ * @return The input string surrounded by double quotation marks.
+ */
+std::string GiString::quote(const std::string& str) {
+    return "\"" + str + "\"";
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string input = "example";
+// std::string result = gString->quote(input);
+// std::cout << "Quoted string: " << result << std::endl;
+// Output: "example"
+
+
+/**
+ * @brief Removes surrounding double quotation marks from a string.
+ * 
+ * @param str The input string possibly surrounded by quotes.
+ * @return The input string with surrounding quotes removed.
+ * 
+ * @throws std::invalid_argument If the input string is empty or does not start and end with quotes.
+ */
+std::string GiString::unquote(const std::string& str) {
+    // Check if the input string is empty
+    if (str.empty()) {
+        throw std::invalid_argument("Input string is empty (GiString::unquote)");
+    }
+
+    // Check if the input string starts and ends with quotes
+    if (str.front() != '"' || str.back() != '"') {
+        throw std::invalid_argument("Input string must start and end with quotes (GiString::unquote)");
+    }
+
+    // Remove the surrounding quotes
+    return str.substr(1, str.length() - 2);
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string input = "\"example\"";
+// std::string result = gString->unquote(input);
+// std::cout << "Unquoted string: " << result << std::endl;
+// Output: "example"
+
+
+
+/**
+ * @brief Masks sensitive data in a string, replacing characters with asterisks.
+ * 
+ * @param str The input string containing sensitive data.
+ * @param sensitiveChars The characters to be masked.
+ * @param maskChar The character to use as a mask (default is '*').
+ * @return The input string with sensitive data masked.
+ * 
+ * @throws std::invalid_argument If the input string is empty or the list of sensitive characters is empty.
+ */
+std::string GiString::mask_sensitive(const std::string& str, const std::string& sensitiveChars, char maskChar = '*') {
+    // Check if the input string is empty
+    if (str.empty()) {
+        throw std::invalid_argument("Input string is empty (GiString::mask_sensitive)");
+    }
+
+    // Check if the list of sensitive characters is empty
+    if (sensitiveChars.empty()) {
+        throw std::invalid_argument("List of sensitive characters is empty (GiString::mask_sensitive)");
+    }
+
+    // Mask sensitive characters in the string
+    std::string maskedStr = str;
+    for (char c : sensitiveChars) {
+        std::replace(maskedStr.begin(), maskedStr.end(), c, maskChar);
+    }
+
+    return maskedStr;
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string input = "password123";
+// std::string result = gString->mask_sensitive(input, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+// std::cout << "Masked string: " << result << std::endl;
+// Output: "***********"
+
+
+/**
+ * @brief Capitalizes the first letter of each sentence in a string.
+ * 
+ * @param str The input string containing sentences.
+ * @return The string with the first letter of each sentence capitalized.
+ * 
+ * @throws std::invalid_argument If the input string is empty.
+ */
+std::string GiString::capitalize_sentences(const std::string& str) {
+    // Check if the input string is empty
+    if (str.empty()) {
+        throw std::invalid_argument("Input string is empty (GiString::capitalize_sentences)");
+    }
+
+    std::string result = str;
+    bool capitalizeNext = true; // Flag to capitalize next character
+
+    // Iterate over each character in the string
+    for (size_t i = 0; i < result.length(); ++i) {
+        if (capitalizeNext && std::isalpha(result[i])) {
+            result[i] = std::toupper(result[i]); // Capitalize the character
+            capitalizeNext = false; // Reset the flag
+        }
+        // Set flag to capitalize next character if it's a punctuation indicating end of sentence
+        if (result[i] == '.' || result[i] == '?' || result[i] == '!') {
+            capitalizeNext = true;
+        }
+    }
+
+    return result;
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string input = "hello. this is a test! it should work. or not?";
+// std::string result = gString->capitalize_sentences(input);
+// std::cout << "Capitalized sentences: " << result << std::endl;
+// Output: "Hello. This is a test! It should work. Or not?"
+
+
+/**
+ * @brief Returns the number of lines in a string.
+ * 
+ * @param str The input string containing lines.
+ * @return The number of lines in the input string.
+ */
+size_t GiString::line_count(const std::string& str) {
+    // Check if the input string is empty
+    if (str.empty()) {
+        throw std::invalid_argument("Input string is empty (GiString::line_count)");
+    }
+
+    std::stringstream ss(str);
+    size_t count = 0;
+    std::string line;
+
+    // Count the number of lines in the string
+    while (std::getline(ss, line)) {
+        ++count;
+    }
+
+    return count;
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string input = "Line 1\nLine 2\nLine 3";
+// size_t result = gString->line_count(input);
+// std::cout << "Number of lines: " << result << std::endl;
+// Output: "Number of lines: 3"
+
+
+/**
+ * @brief Finds and returns the least common character in a string.
+ * 
+ * @param str The input string.
+ * @return The least common character in the input string.
+ * 
+ * @throws std::invalid_argument If the input string is empty.
+ */
+char GiString::least_common_char(const std::string& str) {
+    // Check if the input string is empty
+    if (str.empty()) {
+        throw std::invalid_argument("Input string is empty (GiString::least_common_char)");
+    }
+
+    std::unordered_map<char, int> charCount;
+
+    // Count occurrences of each character in the string
+    for (char c : str) {
+        ++charCount[c];
+    }
+
+    // Find the least common character
+    char leastCommon = str[0];
+    int minCount = charCount[str[0]];
+    for (const auto& pair : charCount) {
+        if (pair.second < minCount) {
+            minCount = pair.second;
+            leastCommon = pair.first;
+        }
+    }
+
+    return leastCommon;
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string input = "abbcccddddeeeee";
+// char result = gString->least_common_char(input);
+// std::cout << "Least common character: " << result << std::endl;
+// Output: "Least common character: a"
+
+
+
+/**
+ * @brief Finds and returns the most common character in a string.
+ * 
+ * @param str The input string.
+ * @return The most common character in the input string.
+ * 
+ * @throws std::invalid_argument If the input string is empty.
+ */
+char GiString::most_common_char(const std::string& str) {
+    // Check if the input string is empty
+    if (str.empty()) {
+        throw std::invalid_argument("Input string is empty (GiString::most_common_char)");
+    }
+
+    std::unordered_map<char, int> charCount;
+
+    // Count occurrences of each character in the string
+    for (char c : str) {
+        ++charCount[c];
+    }
+
+    // Find the most common character
+    char mostCommon = str[0];
+    int maxCount = charCount[str[0]];
+    for (const auto& pair : charCount) {
+        if (pair.second > maxCount) {
+            maxCount = pair.second;
+            mostCommon = pair.first;
+        }
+    }
+
+    return mostCommon;
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string input = "abbcccddddeeeee";
+// char result = gString->most_common_char(input);
+// std::cout << "Most common character: " << result << std::endl;
+// Output: "Most common character: e"
+
+
+/**
+ * @brief Swaps two characters in a string at specified positions.
+ * 
+ * @param str The input string.
+ * @param pos1 The position of the first character to swap (0-based index).
+ * @param pos2 The position of the second character to swap (0-based index).
+ * @return The string with characters swapped at the specified positions.
+ * 
+ * @throws std::invalid_argument If the positions are out of range or the string is empty.
+ */
+std::string GiString::swap_position(const std::string& str, size_t pos1, size_t pos2) {
+    // Check if the input string is empty
+    if (str.empty()) {
+        throw std::invalid_argument("Input string is empty (GiString::swap_position)");
+    }
+
+    // Check if the positions are out of range
+    if (pos1 >= str.length() || pos2 >= str.length()) {
+        throw std::invalid_argument("Position is out of range (GiString::swap_position)");
+    }
+
+    // Swap characters at the specified positions
+    std::string swappedStr = str;
+    std::swap(swappedStr[pos1], swappedStr[pos2]);
+
+    return swappedStr;
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string input = "abcd";
+// std::string result = gString->swap_position(input, 1, 3);
+// std::cout << "Swapped string: " << result << std::endl;
+// Output: "adcb"
+
+
+
+/**
+ * @brief Converts a Roman numeral to an integer.
+ * 
+ * @param s The Roman numeral string to convert.
+ * @return The integer equivalent of the Roman numeral.
+ * 
+ * @throws std::invalid_argument If the input string is empty or contains an invalid Roman numeral.
+ */
+int GiString::roman_to_int(const std::string& s) {
+    // Check if the input string is empty
+    if (s.empty()) {
+        throw std::invalid_argument("Input string is empty (GiString::roman_to_int)");
+    }
+
+    std::unordered_map<char, int> romanMap = {
+        {'I', 1},
+        {'V', 5},
+        {'X', 10},
+        {'L', 50},
+        {'C', 100},
+        {'D', 500},
+        {'M', 1000}
+    };
+
+    int result = 0;
+    int prevValue = 0;
+
+    // Traverse the string from right to left and sum up the values
+    for (int i = s.length() - 1; i >= 0; --i) {
+        int value = romanMap[s[i]];
+
+        // If the current value is less than the previous value, subtract it
+        if (value < prevValue) {
+            result -= value;
+        } else {
+            result += value;
+        }
+
+        prevValue = value;
+    }
+
+    return result;
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string input = "MCMXCIV"; // 1994 in Roman numerals
+// int result = gString->roman_to_int(input);
+// std::cout << "Integer value: " << result << std::endl;
+// Output: "Integer value: 1994"
+
+
+
+/**
+ * @brief Normalizes whitespace in a string by replacing sequences of whitespace characters with a single space.
+ * 
+ * @param str The input string to normalize.
+ * @return The string with normalized whitespace.
+ * 
+ * @throws std::invalid_argument If the input string is empty.
+ */
+std::string GiString::normalize_whitespace(const std::string& str) {
+    // Check if the input string is empty
+    if (str.empty()) {
+        throw std::invalid_argument("Input string is empty (GiString::normalize_whitespace)");
+    }
+
+    std::string result;
+
+    // Flag to indicate if the previous character was a whitespace
+    bool prevIsWhitespace = false;
+
+    // Iterate over each character in the string
+    for (char c : str) {
+        // If the current character is a whitespace and the previous character was not a whitespace,
+        // add a space to the result string
+        if (std::isspace(c)) {
+            if (!prevIsWhitespace) {
+                result += ' ';
+                prevIsWhitespace = true;
+            }
+        } else {
+            // If the current character is not a whitespace, add it to the result string
+            result += c;
+            prevIsWhitespace = false;
+        }
+    }
+
+    return result;
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string input = "  Hello   world!  ";
+// std::string result = gString->normalize_whitespace(input);
+// std::cout << "Normalized string: " << result << std::endl;
+// Output: " Hello world! "
+
+
+/**
+ * @brief Removes all punctuation characters from a string.
+ * 
+ * @param str The input string to remove punctuation from.
+ * @return The string with punctuation removed.
+ * 
+ * @throws std::invalid_argument If the input string is empty.
+ */
+std::string GiString::remove_punctuation(const std::string& str) {
+    // Check if the input string is empty
+    if (str.empty()) {
+        throw std::invalid_argument("Input string is empty (GiString::remove_punctuation)");
+    }
+
+    std::string result;
+
+    // Iterate over each character in the string
+    for (char c : str) {
+        // If the current character is not a punctuation, add it to the result string
+        if (!std::ispunct(c)) {
+            result += c;
+        }
+    }
+
+    return result;
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string input = "Hello, world!";
+// std::string result = gString->remove_punctuation(input);
+// std::cout << "String without punctuation: " << result << std::endl;
+// Output: "String without punctuation: Hello world"
+
+
+/**
+ * @brief Converts a string to its hexadecimal representation.
+ * 
+ * @param str The input string to convert.
+ * @return The hexadecimal representation of the input string.
+ * 
+ * @throws std::invalid_argument If the input string is empty.
+ */
+std::string GiString::to_hex(const std::string& str) {
+    // Check if the input string is empty
+    if (str.empty()) {
+        throw std::invalid_argument("Input string is empty (GiString::to_hex)");
+    }
+
+    std::stringstream ss;
+
+    // Convert each character of the input string to hexadecimal representation
+    for (char c : str) {
+        // Convert the character to hexadecimal and append it to the stringstream
+        ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(c);
+    }
+
+    return ss.str();
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string input = "hello";
+// std::string result = gString->to_hex(input);
+// std::cout << "Hexadecimal representation: " << result << std::endl;
+// Output: "Hexadecimal representation: 68656c6c6f"
+
+
+/**
+ * @brief Converts a hexadecimal string to its ASCII representation.
+ * 
+ * @param hexStr The hexadecimal string to convert.
+ * @return The ASCII representation of the hexadecimal string.
+ * 
+ * @throws std::invalid_argument If the input hexadecimal string is empty or has an odd length.
+ */
+std::string GiString::from_hex(const std::string& hexStr) {
+    // Check if the input hexadecimal string is empty
+    if (hexStr.empty()) {
+        throw std::invalid_argument("Input hexadecimal string is empty (GiString::from_hex)");
+    }
+
+    // Check if the input hexadecimal string has an odd length
+    if (hexStr.length() % 2 != 0) {
+        throw std::invalid_argument("Input hexadecimal string has an odd length (GiString::from_hex)");
+    }
+
+    std::stringstream ss;
+    for (size_t i = 0; i < hexStr.length(); i += 2) {
+        // Extract two characters at a time from the hexadecimal string
+        std::string byteString = hexStr.substr(i, 2);
+
+        // Convert the two characters to an integer
+        int byteValue;
+        std::stringstream(byteString) >> std::hex >> byteValue;
+
+        // Append the character corresponding to the integer value to the result stringstream
+        ss << static_cast<char>(byteValue);
+    }
+
+    return ss.str();
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string input = "68656c6c6f";
+// std::string result = gString->from_hex(input);
+// std::cout << "ASCII representation: " << result << std::endl;
+// Output: "ASCII representation: hello"

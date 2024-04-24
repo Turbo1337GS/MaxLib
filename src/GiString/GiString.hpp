@@ -115,6 +115,10 @@ public:
     std::string to_hex(const std::string &str);
     std::string from_hex(const std::string &hexStr);
     std::string to_octal(const std::string &str);
+    std::string from_octal(const std::string &octalStr);
+    bool bracket_check(const std::string &str);
+    std::string squeeze(const std::string &str);
+    std::string expand_tabs(const std::string &str, size_t tabWidth);
     std::string capitalize_each_word(const std::string &str);
     template <typename T>
     T reduce(const std::string &str, T init, std::function<T(T, char)> binary_func);

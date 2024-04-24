@@ -3179,3 +3179,173 @@ std::string GiString::to_octal(const std::string& str) {
 // std::string result = gString->to_octal(input);
 // std::cout << "Octal representation: " << result << std::endl;
 // Output: "Octal representation: 150 145 154 154 157"
+
+
+/**
+ * @brief Converts an octal string to its ASCII representation.
+ * 
+ * @param octalStr The octal string to convert.
+ * @return The ASCII representation of the octal string.
+ * 
+ * @throws std::invalid_argument If the input octal string is empty.
+ */
+std::string GiString::from_octal(const std::string& octalStr) {
+    // Check if the input octal string is empty
+    if (octalStr.empty()) {
+        throw std::invalid_argument("Input octal string is empty (GiString::from_octal)");
+    }
+
+    std::stringstream ss;
+    std::istringstream iss(octalStr);
+
+    // Parse the input octal string and convert each octal number to its ASCII representation
+    int octalValue;
+    while (iss >> std::oct >> octalValue) {
+        // Append the character corresponding to the octal value to the result stringstream
+        ss << static_cast<char>(octalValue);
+    }
+
+    return ss.str();
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string input = "150 145 154 154 157";
+// std::string result = gString->from_octal(input);
+// std::cout << "ASCII representation: " << result << std::endl;
+// Output: "ASCII representation: hello"
+
+
+
+
+/**
+ * @brief Checks if parentheses in a string are correctly paired and arranged.
+ * 
+ * @param str The input string to check.
+ * @return True if parentheses are correctly paired and arranged, false otherwise.
+ */
+bool GiString::bracket_check(const std::string& str) {
+    // Check if the input string is empty
+    if (str.empty()) {
+        throw std::invalid_argument("Input string is empty (GiString::bracket_check)");
+    }
+
+    std::stack<char> brackets;
+
+    // Iterate over each character in the string
+    for (char c : str) {
+        // If the current character is an opening bracket, push it onto the stack
+        if (c == '(' || c == '[' || c == '{') {
+            brackets.push(c);
+        }
+        // If the current character is a closing bracket
+        else if (c == ')' || c == ']' || c == '}') {
+            // If the stack is empty, there is no matching opening bracket
+            if (brackets.empty()) {
+                return false;
+            }
+
+            // Pop the top element from the stack
+            char top = brackets.top();
+            brackets.pop();
+
+            // Check if the current closing bracket matches the top element on the stack
+            if ((c == ')' && top != '(') || (c == ']' && top != '[') || (c == '}' && top != '{')) {
+                return false;
+            }
+        }
+    }
+
+    // If the stack is not empty, there are unmatched opening brackets
+    return brackets.empty();
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string input = "(a + b) * (c - d)";
+// bool result = gString->bracket_check(input);
+// std::cout << "Brackets are correctly paired and arranged: " << std::boolalpha << result << std::endl;
+// Output: "Brackets are correctly paired and arranged: true"
+
+
+
+/**
+ * @brief Removes consecutive duplicate characters from a string, leaving only single occurrences.
+ * 
+ * @param str The input string to squeeze.
+ * @return The string with consecutive duplicate characters removed.
+ * 
+ * @throws std::invalid_argument If the input string is empty.
+ */
+std::string GiString::squeeze(const std::string& str) {
+    // Check if the input string is empty
+    if (str.empty()) {
+        throw std::invalid_argument("Input string is empty (GiString::squeeze)");
+    }
+
+    std::string result;
+
+    // Iterate over each character in the string
+    for (size_t i = 0; i < str.length(); ++i) {
+        // If the current character is different from the next character (or it's the last character),
+        // add it to the result string
+        if (str[i] != str[i + 1] || i == str.length() - 1) {
+            result += str[i];
+        }
+    }
+
+    return result;
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string input = "hellooo";
+// std::string result = gString->squeeze(input);
+// std::cout << "Squeezed string: " << result << std::endl;
+// Output: "Squeezed string: helo"
+
+
+
+/**
+ * @brief Replaces tabs in a string with spaces, optionally specifying the tab width.
+ * 
+ * @param str The input string containing tabs.
+ * @param tabWidth The width of each tab (default is 4).
+ * @return The string with tabs replaced by spaces.
+ * 
+ * @throws std::invalid_argument If the input string is empty or tab width is non-positive.
+ */
+std::string GiString::expand_tabs(const std::string& str, size_t tabWidth = 4) {
+    // Check if the input string is empty
+    if (str.empty()) {
+        throw std::invalid_argument("Input string is empty (GiString::expand_tabs)");
+    }
+
+    // Check if the tab width is non-positive
+    if (tabWidth <= 0) {
+        throw std::invalid_argument("Tab width must be positive (GiString::expand_tabs)");
+    }
+
+    std::string result;
+
+    // Iterate over each character in the string
+    for (char c : str) {
+        // If the current character is a tab, replace it with spaces up to the tab width
+        if (c == '\t') {
+            size_t spacesToAdd = tabWidth - (result.length() % tabWidth);
+            result += std::string(spacesToAdd, ' ');
+        } else {
+            // If the current character is not a tab, add it to the result string
+            result += c;
+        }
+    }
+
+    return result;
+}
+
+// Example usage:
+// GiString* gString = new GiString();
+// std::string input = "hello\tworld\t\t!";
+// std::string result = gString->expand_tabs(input, 4);
+// std::cout << "Expanded string: " << result << std::endl;
+// Output: "hello   world       !"

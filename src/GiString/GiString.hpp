@@ -1,5 +1,7 @@
 // Headers C and C++
 
+#include <any>
+#include <regex>
 #include <string>
 #include <stdexcept>
 #include <cstdio>
@@ -14,17 +16,20 @@
 #include <stdexcept>
 #include <iomanip>
 #include <bitset>
-#include <iomanip> 
+#include <iomanip>
+#include <stack>
+#include <utility>
+#include <unordered_set>
+#include <fstream>
+#include <chrono>
 class GiString
 {
 public:
-
     std::string capitalize(const std::string &str);
     std::string capitalizeWords(const std::string &str);
     std::string swapcase(const std::string &str);
     std::string reverse(const std::string &str);
     bool is_palindrome(const std::string &str) const;
-
     std::string trim_left(const std::string &str);
     std::string trim_right(const std::string &str);
     std::string trim(const std::string &str);
@@ -34,9 +39,7 @@ public:
     std::string upper(const std::string &str);
     std::string lower(const std::string &str);
     size_t count(const std::string &str, const std::string &sub);
-
     std::string substring(const std::string &str, size_t start, size_t end);
-
     std::string replace(const std::string &str, const std::string &old_sub, const std::string &new_sub);
     std::vector<std::string> split(const std::string &str, char delimiter);
     std::string join(const std::vector<std::string> &strs, const std::string &separator);
@@ -119,7 +122,178 @@ public:
     bool bracket_check(const std::string &str);
     std::string squeeze(const std::string &str);
     std::string expand_tabs(const std::string &str, size_t tabWidth);
+    std::string wrap_text(const std::string &text, size_t max_length);
+    std::string text_justify(const std::string &text, size_t max_length);
+    std::string to_morse_code(const std::string &text);
+    std::string from_morse_code(const std::string &morse_code);
+    std::string soundex(const std::string &str);
+    std::string metaphone(const std::string &str);
+    std::vector<std::string> double_metaphone(const std::string &str);
+    std::string rot13(const std::string &str, bool encode);
+    std::string caesar_cipher(const std::string &str, int shift, bool encode);
+    std::string xor_cipher(const std::string &str, const std::string &key);
+    std::string scramble(const std::string &str, const std::string &key);
+    std::string unscramble(const std::string &str, const std::string &key);
+    std::string quote_wrap(const std::string &str, const std::string &quote_format);
+    std::string unquote_wrap(const std::string &str);
+    std::string remove_extra_spaces(const std::string &str);
+    std::string highlight_terms(const std::string &str, const std::vector<std::string> &terms, const std::string &tag);
+    std::string remove_lines(const std::string &str, const std::string &text);
+    std::string insert_at(const std::string &str, size_t position, const std::string &insertion);
+    std::string generate_acronym(const std::string &str);
+    bool is_valid_ip(const std::string &str);
+    bool is_valid_url(const std::string &str);
+    std::string transpose(const std::string &text);
+    bool anagram_check(const std::string &str1, const std::string &str2);
+    std::vector<std::string> extract_emails(const std::string &str);
+    std::string remove_accents(const std::string &input);
+    std::string insert_every_n(const std::string &str, const std::string &insert, int n);
+    std::string substring_after(const std::string &str, const std::string &separator);
+    std::string substring_before(const std::string &str, const std::string &separator);
+    std::string substring_between(const std::string &str, const std::string &startDelim, const std::string &endDelim);
+    std::string concat(std::initializer_list<std::string> strings);
+    int nth_occurrence(const std::string &str, const std::string &target, int n);
+    std::string chop(std::string str);
+    std::string ensure_prefix(std::string str, const std::string &prefix);
+    std::string ensure_suffix(std::string str, const std::string &suffix);
+    std::string remove_last(std::string str, const std::string &ch);
+    bool is_sorted(const std::string &str);
+    std::string unique(std::string str);
+    std::vector<std::string> split_lines(const std::string &str);
+    std::pair<std::string, std::string> split_at(std::string str, size_t index);
+    std::vector<std::string> partition(const std::string &str, const std::string &separator);
+    std::tuple<std::string, std::string, std::string> rpartition(const std::string &str, const std::string &delimiter);
+    int count_lines(const std::string &input);
+    bool is_valid_identifier(const std::string &str);
+    bool is_whitespace(const std::string &str);
+    std::string remove_vowels(const std::string &input);
+    std::string remove_consonants(const std::string &str);
+    std::string swap_words(const std::string &input);
+    std::string normalize_path(const std::string &path);
+    std::string ellipsis(const std::string &str, size_t length);
+    std::vector<int> extract_numbers(const std::string &str);
+    std::string increment_number_suffix(const std::string &input, int incrementBy);
+    std::string decrement_number_suffix(const std::string &str, int decrementBy);
+    std::string to_title_case(const std::string &str);
+    std::string from_title_case(const std::string &input);
+    std::vector<std::string> extract_hashtags(const std::string &input);
+    std::string insert_random(const std::string &str);
+    std::string anonymize(const std::string &str, size_t start, size_t length, char mask);
+    std::string mask_characters(const std::string &input, char mask, const std::vector<int> &positions);
+    std::string unmask_characters(const std::string &str, const std::unordered_map<char, char> &mask);
+    std::string squish_spaces(const std::string &input);
+    std::string expand_to_length(const std::string &str, size_t length, char fillChar, char side);
+    std::string mirror(const std::string &str);
+    std::string rotate(const std::string &str, int positions);
+    bool is_valid_hex_code(const std::string &str);
+    std::string replace_numbers(const std::string &str, const std::string &replacement);
+    std::string strip_html_tags(const std::string &input);
+    std::vector<std::string> parse_csv_line(const std::string &csvLine);
+    std::string mask_credit_card(const std::string &creditCardNumber);
+    std::vector<std::string> extract_links(const std::string &input);
+    std::string increment_date(const std::string &dateStr, int daysToAdd);
+    std::string decrement_date(const std::string &dateStr, int numDays);
+    double lexical_density(const std::string &text);
+    std::string scramble_except_first_last(const std::string &word);
+    std::string serialize(const std::string &input);
+    std::string deserialize(const std::string &serializedString);
+    bool is_valid_password(const std::string &password);
+    std::string generate_password(int length, bool includeUppercase, bool includeLowercase, bool includeDigits, bool includeSpecialChars);
+    int count_vowels(const std::string &input);
+    int count_consonants(std::string str);
+    std::string toggle_case(const std::string &str);
+    bool contains_only(const std::string &str, const std::string &charSet);
+    std::string exclude_chars(const std::string &str, const std::string &charSet);
+    bool normalize_newlines(const std::string &filePath, const std::string &chosenFormat);
+    std::string prefix_lines(const std::string &str, const std::string &prefix);
+    std::string suffix_lines(const std::string &str, const std::string &suffix);
+    std::unordered_map<std::string, std::string> to_key_value_pairs(const std::string &input);
+    std::string from_key_value_pairs(const std::unordered_map<std::string, std::string> &data);
+    std::string interleave(const std::string &str1, const std::string &str2);
+    void deinterleave(const std::string &input, std::string &output1, std::string &output2);
+    std::string diff(const std::string &str1, const std::string &str2);
+    std::string patch(const std::string &patch);
+    std::string compress_whitespace(const std::string &input);
+    std::string to_camel_case(const std::string &str);
+    std::string from_camel_case(const std::string &str);
+    std::string to_snake_case(const std::string &str);
+    std::string from_snake_case(const std::string &snakeCaseStr);
+    std::string to_kebab_case(const std::string &str);
+    std::string from_kebab_case(const std::string &kebabCaseStr);
+    std::string to_pascal_case(const std::string &str);
+    std::string from_pascal_case(const std::string &str);
+    std::string randomize_case(const std::string &str);
+    std::string singularize(const std::string &pluralWord);
     std::string capitalize_each_word(const std::string &str);
     template <typename T>
     T reduce(const std::string &str, T init, std::function<T(T, char)> binary_func);
+    std::string pluralize(const std::string &word);
+    bool isVowel(char c);
+    std::string html_to_text(const std::string &htmlContent);
+    std::string xml_escape(const std::string &input);
+    std::string increment_hex(const std::string &hexValue, int increment);
+    std::string decrement_hex(const std::string &hexNum, const std::string &decrementValue);
+    std::string increment_by_pattern(const std::string &input, const int pattern);
+    std::string decrement_by_pattern(const std::string &input, const std::string &pattern);
+    std::string fill_template(const std::string &templateStr, const std::any &data);
+    std::vector<std::string> extract_templates(const std::string &input);
+    std::string swap_pairs(const std::string &str);
+    int index_of_nth(const std::string &str, const std::string &target, int n);
+    std::string replace_nth(std::string str, const std::string &toReplace, const std::string &replaceWith, int n);
+    std::string random_extract(const std::string &input, size_t length);
+    std::string auto_indent(const std::string &str);
+    std::string balance_brackets(std::string str);
+    std::string to_base(const std::string &number, int base);
+    std::string normalize_casing(const std::string &input, const std::string &style);
+    std::string diacritic_remove(const std::string &text);
+    std::string quote_for_shell(const std::string &input);
+    std::string dequote_for_shell(const std::string &input);
+    std::string escape_regex(const std::string &input);
+    std::string unescape_regex(const std::string &str);
+    std::string capitalize_first(const std::string &str);
+    std::string decapitalize_first(const std::string &str);
+    std::string swap_endians(std::string input);
+    std::vector<std::string> extract_currency(const std::string &input);
+    double string_similarity(const std::string &str1, const std::string &str2);
+    std::string binary_to_string(const std::vector<bool> &binaryData);
+    std::string string_to_binary(const std::string &input);
+    std::string reverse_words(const std::string &str);
+    std::string random_case(const std::string &input);
+    std::string numerify(std::string str);
+    std::string propertize(const std::string &input, const std::string &properties);
+    std::string stripe_emoji(std::string str);
+    std::string emojify(const std::string &str);
+    std::string lexicographically_next(const std::string &str);
+    std::string lexicographically_previous(const std::string &str);
+    std::string adjust_whitespace(const std::string &input);
+    std::string generate_identifier(const std::string &data);
+    int count_substring(std::string str, const std::string &substring);
+    std::string replace_substring(std::string str, const std::string &oldSubstr, const std::string &newSubstr);
+    int visible_length(const std::string &str);
+    std::string to_spongebob_mocking(const std::string &input);
+    std::vector<std::string> insert_ordered(std::vector<std::string> strList, const std::string &str);
+    std::vector<std::string> remove_ordered(const std::vector<std::string> &sortedList, const std::string &strToRemove);
+    bool match_pattern(const std::string &str, const std::string &pattern);
+    std::vector<size_t> find_all_patterns(const std::string &pattern, const std::string &text);
+    std::string case_insensitive_replace(const std::string &str, const std::string &from, const std::string &to);
+    std::string truncate_with_ellipsis(const std::string &str, size_t length);
+    std::string extract_field(const std::string &input, char delimiter, int fieldIndex);
+    std::vector<int> convert_to_numeric(const std::string &input);
+    bool insert_if_absent(std::string &data, size_t index, const std::string &str);
+    std::vector<std::string> explode(const std::string &str);
+    std::string implode(const std::vector<char> &characters);
+    std::string remove_duplicates(const std::string &str);
+    std::string to_braille(const std::string &text);
+    std::string from_braille(const std::string &brailleText);
+    std::vector<std::string> generate_ngrams(const std::string &input, int n);
+    std::string dynamic_replace(const std::string &input, const std::vector<std::string> &values);
+    std::string compile_to_regex(const std::string &str);
+    void random_fill(std::string &str, const std::string &charSet, int length);
+    bool is_balanced_expression(const std::string &expression);
+    std::string wrap_with_tag(const std::string &str, const std::string &tag);
+    std::string normalize_dates(const std::string &input, const std::string &format);
+    std::string reverse_translate(const std::string &input, const std::unordered_map<std::string, std::string> &translationMap);
+    int calculate_reading_time(const std::string &text);
+    std::string unswap_pairs(const std::string &str);
+    std::string apply_mask(const std::string &str, const std::string &mask);
 };

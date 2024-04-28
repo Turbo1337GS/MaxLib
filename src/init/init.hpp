@@ -12,6 +12,7 @@
 
 #include "src/GiString/GiString.hpp"
 #include "src/GiInt/GiInt.hpp"
+#include "src/GiLogs/GiLogs.hpp"
 
 
 
